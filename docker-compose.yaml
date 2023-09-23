@@ -29,8 +29,8 @@ services:
       users-database:
         condition: service_started
     volumes:
-      - ./alembic.ini:/app/alembic.ini:ro
-      - ./src/infrastructure/database/migrations:/app/src/infrastructure/database/migrations:ro
+      - ./alembic.ini:/alembic.ini:ro
+      - ./src/infrastructure/database/migrations:/src/infrastructure/database/migrations:ro
     command: ["python", "-m", "alembic", "upgrade", "head"]
     env_file:
       - .env
@@ -40,7 +40,8 @@ services:
   users-fastapi-app:
     container_name: users.app
     build: .
-    command: python run_users.py
+    working_dir: /
+    command: ["python", "-O", "-m", "src"]
     ports:
       - ${SITE_PORT}:${SITE_PORT}
     depends_on:
