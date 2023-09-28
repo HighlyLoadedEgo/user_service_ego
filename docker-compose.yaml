@@ -1,6 +1,6 @@
 version: "3.9"
 
-name: my-microservices
+name: auth-service
 services:
   users-database:
     image: postgres:14-alpine
@@ -12,13 +12,13 @@ services:
       POSTGRES_DB: ${DATABASE_DB}
       PGDATA: ${DATABASE_PGDATA}
     ports:
-      - ${DATABASE_PORT}:${DATABASE_PORT}
+      - 0:${DATABASE_PORT}
     volumes:
       - ${DATABASE_PGDATA}
     env_file:
       - .env
     networks:
-      my-ms:
+      us-net:
 
   users-postgres-migration:
     container_name: users.migrations
@@ -35,7 +35,7 @@ services:
     env_file:
       - .env
     networks:
-      my-ms:
+      us-net:
 
   users-fastapi-app:
     container_name: users.app
@@ -51,7 +51,7 @@ services:
     env_file:
       - .env
     networks:
-      my-ms:
+      us-net:
 
   minio:
     container_name: service.minio
@@ -70,10 +70,10 @@ services:
         - ${MINIO_HOST}:${MINIO_PORT}:${MINIO_PORT}
         - ${MINIO_PORT_2}:${MINIO_PORT_2}
     networks:
-      my-ms:
+      us-net:
 
 networks:
-  my-ms:
+  us-net:
     driver: bridge
 
 volumes:
